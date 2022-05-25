@@ -144,19 +144,203 @@ void mergeSort(int arr[],int left,int right){
         merge(arr,left,right);
     }
 }
+struct Node
+{
+    int data;
+    Node *next;
+};
+Node *head = NULL, *tail = NULL;
+int len = 0;
+void insertEnd(int value){
+    Node *new_node = new Node;
+    new_node-> data = value;
+    if (head == NULL){
+        head = new_node;
+        new_node->next = NULL;
+        tail = new_node;
+    }
+    else{
+        tail->next = new_node;
+        new_node->next = NULL;
+        tail = new_node;
+    }
+    len++;
+}
+void display(){
+    if (head == NULL)
+        cout << "The linked list is empty!" << el;
+    else{
+        Node *curr = head;
+        while (curr != NULL)
+        {
+            if (curr->next == NULL)
+                cout << curr->data;
+            else
+                cout << curr->data << " ";
+            curr = curr->next;
+        }
+    }
+}
+void insertBegging(int value){
+    Node *new_node = new Node;
+    new_node->data = value;
+    if (head == NULL){
+        head = new_node;
+        new_node->next = NULL;
+    }
+    else{
+        new_node->next = head;
+        head = new_node;
+    }
+    len++;
+}
+void insertAfterValue(int value,int ai){
+    Node *new_node = new Node;
+    Node *curr = head;
+    new_node->data = value;
+    bool found = false;
+    while (curr != NULL)
+    {
+        if (curr->data == ai){
+            new_node->next = curr->next;
+            curr->next = new_node;
+            found = true;
+            break;
+        }
+        curr = curr->next;
+    }
+    if (!found)
+        cout << "The value you want to insert after it not found in the linked list!" << el;
+    else
+        len++;
+}
+void insertAtPosition(int value , int pos){
+    if (pos == 0)
+        insertBegging(value);
+    else if (pos == len)
+        insertEnd(value);
+    else if (pos < len && pos > 0){
+        Node *curr = head;
+        Node *new_node = new Node;
+        new_node->data = value;
+        while (pos > 1)
+        {
+            curr = curr->next;
+            pos--;
+        }
+        new_node->next = curr->next;
+        curr->next = new_node;
+        len++;
+    }
+    else
+        cout << "There is no position " << pos << " in the linked list!" << el;
+}
+void deleteEnd(){
+    if (head == NULL)
+        cout << "The linked list is empty!" << el;
+    else{
+        Node *curr = head , *prev = head;
+        while (curr->next != NULL)
+        {
+            prev = curr;
+            curr = curr->next;
+        }
+        prev->next = NULL;
+        delete(curr);
+        len--;
+    }
+}
+void deleteBegging(){
+    if(head == NULL)
+        cout << "The linked list is empty!" << el;
+    else{
+        Node *curr = head;
+        head = head->next;
+        delete(curr);
+        len--;
+    }
+}
+void deleteByValue(int value){
+    Node *curr = head , *prev = head;
+    bool found = false;
+    if (head == NULL)
+        cout << "The linked list is empty!" << el;
+    else if (head->data == value){
+        Node *curr = head;
+        head = head->next;
+        delete(curr);
+        len--;
+        found = true;
+    }
+    else{
+        while (curr != NULL)
+        {
+            if (curr->data == value){
+                prev->next = curr->next;
+                delete(curr);
+                len--;
+                found = true;
+                break;
+            }
+            prev = curr;
+            curr = curr->next;
+        }
+    }
+    if(!found)
+        cout << "The value " << value << " not found in the linked list!" << el;
+}
+void deleteByPosition(int pos){
+    if (pos == 0)
+        deleteBegging();
+    else if (pos == len - 1)
+        deleteEnd();
+    else if (pos > 0 && pos < len - 1){
+        Node *curr = head , *prev = head;
+        bool found = false;
+        while (curr != NULL)
+        {
+            if (pos == 0){
+                prev->next = curr->next;
+                delete(curr);
+                len--;
+                found = true;
+            }
+            prev = curr;
+            curr = curr->next;
+            pos--;
+        }
+    }
+    else 
+        cout << "There is no position " << pos << " in the linked list!" << el;
+}
+int LL_linearSearch(int value){
+    Node *curr = head;
+    if (head == NULL)
+        return -1;
+    int pos = 0;
+    while (curr != NULL)
+    {
+        if(curr->data == value)
+            return pos;
+        pos++;
+        curr = curr->next;
+    }
+    return -1;
+}
+
 int main(){
     while (true){
         cout << "Welcome to my data structure project!" << el;
         cout << "In this project you can deal with arrays, linked lists, stacks, queues, trees!" << el;
         cout << "Enter 1 to deal with Arrays\nEnter 2 to deal with Linked Lists\nEnter 3 to deal with Stacks\nEnter 4 to deal with Queues\nEnter 5 to deal with Trees\n\nEnter 0 to Exit the program" << el;
         cout << "-------------------------------------------------" << el;
-        cout << "Enter your choice:";
+        cout << "Enter your choice: ";
         int mainChoice; cin >> mainChoice;
         if (mainChoice == 1){
-            cout << "Array is activated successfully!" << el;
-            cout << "Enter the size of the array:";
+            cout << "Array activated successfully!" << el;
+            cout << "Enter the size of the array: ";
             int size; cin >> size;
-            cout << "Enter elements of the array in one line seperated by space:";
+            cout << "Enter elements of the array in one line seperated by space: ";
             int arr[size];
             for (int i = 0; i < size; ++i) {
                 cin >> arr[i];
@@ -178,7 +362,7 @@ int main(){
                     cout << "Operations available for sorted array:" << el;
                     cout << "Enter 1 for Linear search\nEnter 2 for Binary search\n\nEnter 0 to exit from array option" << el;
                     cout << "-------------------------------------------------" << el;
-                    cout << "Enter your choice:";
+                    cout << "Enter your choice: ";
                     int sortedChoice; cin >> sortedChoice;
                     if (sortedChoice == 1){
                         cout << "Linear search activated successfully!" << el;
@@ -228,7 +412,7 @@ int main(){
                     cout << "Operations available for unsorted array:" << el;
                     cout << "Enter 1 for Linear search\nEnter 2 for Binary search\nEnter 3 for Bubble sort\nEnter 4 for Selection sort\nEnter 5 for Insertion sort\nEnter 6 for Quick sort\nEnter 7 for Merge sort\n\nEnter 0 to exit to main menu" << el;
                     cout << "-------------------------------------------------" << el;
-                    cout << "Enter your choice:";
+                    cout << "Enter your choice: ";
                     int unsortedChoice; cin >> unsortedChoice;
                     if (unsortedChoice == 1){
                         cout << "Linear search activated successfully!" << el;
@@ -253,7 +437,7 @@ int main(){
                         cout << "Binary search activated successfully but the array is not sorted you must sort it first!" << el;
                         cout << "Enter 1 for Bubble sort\nEnter 2 for Selection sort\nEnter 3 for Insertion sort\nEnter 4 for Quick sort\nEnter 5 for Merge sort\n\nEnter 0 to exit to last menu" << el;
                         cout << "-------------------------------------------------" << el;
-                        cout << "Enter your choice:";
+                        cout << "Enter your choice: ";
                         int sortChoice; cin >> sortChoice;
                         if (sortChoice == 1){
                             cout << "Bubble sort activated successfully!" << el;
@@ -353,7 +537,7 @@ int main(){
                                         cout << "-------------------------------------------------" << el;
                                         cout << "Do you want to make more operations on this array?" << el;
                                         cout << "Enter (YES,yes,y) to make more operations\nEnter (NO,no,n) to exit from array option" << el;
-                                        cout << "Enter your choice:";
+                                        cout << "Enter your choice: ";
                                         string moreChoice; cin >> moreChoice;
                                         if (moreChoice == "YES" || moreChoice == "yes" || moreChoice == "y")
                                             continue;
@@ -397,7 +581,7 @@ int main(){
                                 cout << "Operations available for sorted array:" << el;
                                 cout << "Enter 1 for Linear search\nEnter 2 for Binary search\n\nEnter 0 to exit from array option" << el;
                                 cout << "-------------------------------------------------" << el;
-                                cout << "Enter your choice:";
+                                cout << "Enter your choice: ";
                                 int sortedChoice; cin >> sortedChoice;
                                 if (sortedChoice == 1){
                                     cout << "Linear search activated successfully!" << el;
@@ -432,7 +616,7 @@ int main(){
                                     cout << "-------------------------------------------------" << el;
                                     cout << "Do you want to make more operations on this array?" << el;
                                     cout << "Enter (YES,yes,y) to make more operations\nEnter (NO,no,n) to exit from array option" << el;
-                                    cout << "Enter your choice:";
+                                    cout << "Enter your choice: ";
                                     string moreChoice; cin >> moreChoice;
                                     if (moreChoice == "YES" || moreChoice == "yes" || moreChoice == "y")
                                         continue;
@@ -510,7 +694,7 @@ int main(){
                                     cout << "-------------------------------------------------" << el;
                                     cout << "Do you want to make more operations on this array?" << el;
                                     cout << "Enter (YES,yes,y) to make more operations\nEnter (NO,no,n) to exit from array option" << el;
-                                    cout << "Enter your choice:";
+                                    cout << "Enter your choice: ";
                                     string moreChoice; cin >> moreChoice;
                                     if (moreChoice == "YES" || moreChoice == "yes" || moreChoice == "y")
                                         continue;
@@ -772,6 +956,180 @@ int main(){
                         break;
                     }
                 }
+            }
+        }
+        else if (mainChoice == 2){
+            Node *head = NULL, *tail = NULL;
+            int len = 0;
+            while(true){
+                cout << "Linked list activated successfully!" << el;
+                cout << "Enter 1 to insert nodes from the end\nEnter 2 to insert nodes from the begging\nEnter 3 to insert node after specific value\nEnter 4 to insert node at specific position\nEnter 5 to delete the last node\nEnter 6 to delete the first node\nEnter 7 to delete node by it's value\nEnter 8 to delete node by it's position\nEnter 9 to search for a specific value in the list\n\nEnter 0 to exit from linked list option" << el;
+                cout << "Enter your choice: ";
+                int llChoice; cin >> llChoice;
+                if (llChoice == 1){
+                    cout << "Enter number of nodes you want to insert: ";
+                    int numberOfNodes; cin >> numberOfNodes;
+                    for (int i = 0; i < numberOfNodes; i++){
+                        cout << "Enter the value of node NO." << i+1 <<": ";
+                        int value; cin >> value;
+                        insertEnd(value);
+                    }
+                    cout << "Your linked list [";
+                    display();
+                    cout << "]" << el;
+                    cout << "-------------------------------------------------" << el;
+                    cout << "Do you want to make more operations on this linked list?" << el;
+                    cout << "Enter (YES,yes,y) to make more operations\nEnter (NO,no,n) to exit from array option" << el;
+                    cout << "Enter your choice: ";
+                    string moreChoice; cin >> moreChoice;
+                    if (moreChoice == "YES" || moreChoice == "yes" || moreChoice == "y")
+                        continue;
+                    else if (moreChoice == "NO" || moreChoice == "no" || moreChoice == "n")
+                        break;
+                }
+                else if (llChoice == 2){
+                    cout << "Enter number of nodes you want to insert: ";
+                    int numberOfNodes; cin >> numberOfNodes;
+                    for (int i = 0; i < numberOfNodes; i++){
+                        cout << "Enter the value of node NO." << i+1 <<": ";
+                        int value; cin >> value;
+                        insertBegging(value);
+                    }
+                    cout << "Your linked list [";
+                    display();
+                    cout << "]" << el;
+                    cout << "-------------------------------------------------" << el;
+                    cout << "Do you want to make more operations on this linked list?" << el;
+                    cout << "Enter (YES,yes,y) to make more operations\nEnter (NO,no,n) to exit from array option" << el;
+                    cout << "Enter your choice: ";
+                    string moreChoice; cin >> moreChoice;
+                    if (moreChoice == "YES" || moreChoice == "yes" || moreChoice == "y")
+                        continue;
+                    else if (moreChoice == "NO" || moreChoice == "no" || moreChoice == "n")
+                        break;                   
+                }
+                else if (llChoice == 3){
+                    cout << "Enter the value of the node: ";
+                    int value; cin >> value;
+                    cout << "Enter the value of the node you want to insert after it: ";
+                    int ai; cin >> ai;
+                    insertAfterValue(value,ai);
+                    cout << "Your linked list [";
+                    display();
+                    cout << "]" << el;
+                    cout << "-------------------------------------------------" << el;
+                    cout << "Do you want to make more operations on this linked list?" << el;
+                    cout << "Enter (YES,yes,y) to make more operations\nEnter (NO,no,n) to exit from array option" << el;
+                    cout << "Enter your choice: ";
+                    string moreChoice; cin >> moreChoice;
+                    if (moreChoice == "YES" || moreChoice == "yes" || moreChoice == "y")
+                        continue;
+                    else if (moreChoice == "NO" || moreChoice == "no" || moreChoice == "n")
+                        break;
+                }
+                else if (llChoice == 4){
+                    cout << "Enter the value of the node: ";
+                    int value; cin >> value;
+                    cout << "Enter the position: ";
+                    int pos; cin >> pos;
+                    insertAtPosition(value,pos);
+                    cout << "Your linked list [";
+                    display();
+                    cout << "]" << el;
+                    cout << "-------------------------------------------------" << el;
+                    cout << "Do you want to make more operations on this linked list?" << el;
+                    cout << "Enter (YES,yes,y) to make more operations\nEnter (NO,no,n) to exit from array option" << el;
+                    cout << "Enter your choice: ";
+                    string moreChoice; cin >> moreChoice;
+                    if (moreChoice == "YES" || moreChoice == "yes" || moreChoice == "y")
+                        continue;
+                    else if (moreChoice == "NO" || moreChoice == "no" || moreChoice == "n")
+                        break;
+                }
+                else if (llChoice == 5){
+                    deleteEnd();
+                    cout << "Your linked list [";
+                    display();
+                    cout << "]" << el;
+                    cout << "-------------------------------------------------" << el;
+                    cout << "Do you want to make more operations on this linked list?" << el;
+                    cout << "Enter (YES,yes,y) to make more operations\nEnter (NO,no,n) to exit from array option" << el;
+                    cout << "Enter your choice: ";
+                    string moreChoice; cin >> moreChoice;
+                    if (moreChoice == "YES" || moreChoice == "yes" || moreChoice == "y")
+                        continue;
+                    else if (moreChoice == "NO" || moreChoice == "no" || moreChoice == "n")
+                        break;
+                }
+                else if (llChoice == 6){
+                    deleteBegging();
+                    cout << "Your linked list [";
+                    display();
+                    cout << "]" << el;
+                    cout << "-------------------------------------------------" << el;
+                    cout << "Do you want to make more operations on this linked list?" << el;
+                    cout << "Enter (YES,yes,y) to make more operations\nEnter (NO,no,n) to exit from array option" << el;
+                    cout << "Enter your choice: ";
+                    string moreChoice; cin >> moreChoice;
+                    if (moreChoice == "YES" || moreChoice == "yes" || moreChoice == "y")
+                        continue;
+                    else if (moreChoice == "NO" || moreChoice == "no" || moreChoice == "n")
+                        break;
+                }
+                else if (llChoice == 7){
+                    cout << "Enter the value you want to delete: ";
+                    int value; cin >> value;
+                    deleteByValue(value);
+                    cout << "Your linked list [";
+                    display();
+                    cout << "]" << el;
+                    cout << "-------------------------------------------------" << el;
+                    cout << "Do you want to make more operations on this linked list?" << el;
+                    cout << "Enter (YES,yes,y) to make more operations\nEnter (NO,no,n) to exit from array option" << el;
+                    cout << "Enter your choice: ";
+                    string moreChoice; cin >> moreChoice;
+                    if (moreChoice == "YES" || moreChoice == "yes" || moreChoice == "y")
+                        continue;
+                    else if (moreChoice == "NO" || moreChoice == "no" || moreChoice == "n")
+                        break;
+                }
+                else if (llChoice == 8){
+                    cout << "Enter the position you want to delete: ";
+                    int pos; cin >> pos;
+                    deleteByPosition(pos);
+                    cout << "Your linked list [";
+                    display();
+                    cout << "]" << el;
+                    cout << "-------------------------------------------------" << el;
+                    cout << "Do you want to make more operations on this linked list?" << el;
+                    cout << "Enter (YES,yes,y) to make more operations\nEnter (NO,no,n) to exit from array option" << el;
+                    cout << "Enter your choice: ";
+                    string moreChoice; cin >> moreChoice;
+                    if (moreChoice == "YES" || moreChoice == "yes" || moreChoice == "y")
+                        continue;
+                    else if (moreChoice == "NO" || moreChoice == "no" || moreChoice == "n")
+                        break;
+                }
+                else if (llChoice == 9){
+                    cout << "Enter the value you want to search for in the linked list: ";
+                    int value; cin >> value;
+                    int ans = LL_linearSearch(value);
+                    if (ans == -1)
+                        cout << "There is no value " << value << " in the linked list!" << el;
+                    else
+                        cout << "The position of value " << value << " is " << ans << el;
+                    cout << "-------------------------------------------------" << el;
+                    cout << "Do you want to make more operations on this linked list?" << el;
+                    cout << "Enter (YES,yes,y) to make more operations\nEnter (NO,no,n) to exit from array option" << el;
+                    cout << "Enter your choice: ";
+                    string moreChoice; cin >> moreChoice;
+                    if (moreChoice == "YES" || moreChoice == "yes" || moreChoice == "y")
+                        continue;
+                    else if (moreChoice == "NO" || moreChoice == "no" || moreChoice == "n")
+                        break;
+                }
+                else if (llChoice == 0)
+                    break;
             }
         }
     }
