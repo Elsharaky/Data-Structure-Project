@@ -167,9 +167,6 @@ void insertEnd(int value){
     len++;
 }
 void displayLL(){
-    if (head == NULL)
-        cout << "The linked list is empty!" << el;
-    else{
         Node *curr = head;
         while (curr != NULL)
         {
@@ -179,7 +176,6 @@ void displayLL(){
                 cout << curr->data << " ";
             curr = curr->next;
         }
-    }
 }
 void insertBegging(int value){
     Node *new_node = new Node;
@@ -240,6 +236,11 @@ void deleteEnd(){
         cout << "The linked list is empty!" << el;
     else{
         Node *curr = head , *prev = head;
+        if (head->next == NULL){
+            head = NULL;
+            delete(curr);
+            return;
+        }
         while (curr->next != NULL)
         {
             prev = curr;
@@ -350,7 +351,7 @@ void push(int value){
     else
         cout << "Stack Overflow!" << el;
 }
-int peek(){
+int stackPeek(){
     if (top > -1)
         return Stack[top];
     else
@@ -364,9 +365,6 @@ void pop(){
     }
 }
 void displayStack(){
-    if (top < 0)
-        cout << "Stack is empty!" << el;
-    else{
         int curr = top;
         while (curr > -1){
             if (curr == 0)
@@ -375,8 +373,48 @@ void displayStack(){
                 cout << Stack[curr] << " ";
             curr--;
         }
+}
+int front = -1 , rear = -1;
+int Queue[1000];
+void enqueue(int value){
+    if (front == rear && front == -1){
+        front++;
+        rear++;
     }
-    
+    else
+        rear++;
+    if (rear < 1000 || rear % 1000 < front)
+        Queue[rear % 1000] = value;
+    else
+        cout << "The queue is full!" << el;
+}
+void dequeue(){
+    if(front == rear && front == -1)
+        cout << "The queue is empty!" << el;
+    else if (front > rear)
+        cout << "The queue is empty!" << el;
+    else
+        front++;
+}
+void displayQueue(){
+    if (front == rear && front == -1)
+        cout << "The queue is empyt!" << el;
+    else if (front > rear)
+        cout << "The queue is empty!" << el;
+    else{
+        int curr = front;
+        while (curr <=  rear)
+        {
+            if (curr == rear)
+                cout << Queue[curr%1000];
+            else
+                cout << Queue[curr%1000] << " ";
+            curr++;
+        }
+    }
+}
+int queuePeek(){
+    return Queue[front%1000];
 }
 int main(){
     while (true){
@@ -1105,10 +1143,14 @@ int main(){
                     }
                 }
                 else if (llChoice == 5){
-                    deleteEnd();
-                    cout << "Your linked list [";
-                    displayLL();
-                    cout << "]" << el;
+                    if (head == NULL)
+                        cout << "The linked list is empty!" << el;
+                    else{
+                        deleteEnd();
+                        cout << "Your linked list [";
+                        displayLL();
+                        cout << "]" << el;        
+                    }
                     cout << "-------------------------------------------------" << el;
                     cout << "Do you want to make more operations on this linked list?" << el;
                     cout << "Enter (YES,yes,y) to make more operations\nEnter (NO,no,n) to exit from linked list option" << el;
@@ -1122,10 +1164,14 @@ int main(){
                     }
                 }
                 else if (llChoice == 6){
-                    deleteBegging();
-                    cout << "Your linked list [";
-                    displayLL();
-                    cout << "]" << el;
+                    if (head == NULL)
+                        cout << "The linked list is empty!" << el;
+                    else{
+                        deleteBegging();
+                        cout << "Your linked list [";
+                        displayLL();
+                        cout << "]" << el;
+                    }
                     cout << "-------------------------------------------------" << el;
                     cout << "Do you want to make more operations on this linked list?" << el;
                     cout << "Enter (YES,yes,y) to make more operations\nEnter (NO,no,n) to exit from linked list option" << el;
@@ -1223,12 +1269,14 @@ int main(){
                     cout << "]" << el;
                     cout << "-------------------------------------------------" << el;
                     while(true){
-                        cout << "Enter 1 to pop an element from the Stack\nEnter 2 to get the top of the stack\nEnter 3 to display the stack\n\nEnter 0 to exit from stack option" << el;
+                        cout << "Enter 1 to push an element to the Stack\nEnter 2 to pop an element from the stack\nEnter 3 to get the top of the stack\nEnter 4 to display the stack\n\nEnter 0 to exit from stack option" << el;
                         cout << "Enter your choice: ";
                         int stackChoice; cin >> stackChoice;
                         if (stackChoice == 1){
-                            pop();
-                            cout << "Your stack is [";
+                            cout << "Enter the value of the element you want to push: ";
+                            int value; cin >> value;
+                            push(value);
+                            cout << "Your Stack is [";
                             displayStack();
                             cout << "]" << el;
                             cout << "-------------------------------------------------" << el;
@@ -1241,8 +1289,15 @@ int main(){
                             else if (moreChoice == "NO" || moreChoice == "no" || moreChoice == "n")
                                 break;
                         }
-                        else if (stackChoice == 2){
-                            cout << "Top of the stack is: " << peek() << el;
+                        if (stackChoice == 2){
+                            if (top <= -1)
+                                cout << "The stack is empty!" << el;
+                            else{
+                                pop();
+                                cout << "Your stack is [";
+                                displayStack();
+                                cout << "]" << el;
+                            }
                             cout << "-------------------------------------------------" << el;
                             cout << "Do you want to make more operations on this stack?" << el;
                             cout << "Enter (YES,yes,y) to make more operations\nEnter (NO,no,n) to exit to last menu" << el;
@@ -1254,6 +1309,21 @@ int main(){
                                 break;
                         }
                         else if (stackChoice == 3){
+                            if(stackPeek() + top != 0)
+                                cout << "Top of the stack is: " << stackPeek() << el;
+                            else
+                                cout << "The stack is empty!" << el;
+                            cout << "-------------------------------------------------" << el;
+                            cout << "Do you want to make more operations on this stack?" << el;
+                            cout << "Enter (YES,yes,y) to make more operations\nEnter (NO,no,n) to exit to last menu" << el;
+                            cout << "Enter your choice: ";
+                            string moreChoice; cin >> moreChoice;
+                            if (moreChoice == "YES" || moreChoice == "yes" || moreChoice == "y")
+                                continue;
+                            else if (moreChoice == "NO" || moreChoice == "no" || moreChoice == "n")
+                                break;
+                        }
+                        else if (stackChoice == 4){
                             cout << "Your stack is [";
                             displayStack();
                             cout << "]" << el;
@@ -1287,12 +1357,14 @@ int main(){
                     cout << "]" << el;
                     cout << "-------------------------------------------------" << el;
                     while(true){
-                        cout << "Enter 1 to pop an element from the Stack\nEnter 2 to get the top of the stack\nEnter 3 to display the stack\n\nEnter 0 to exit from stack option" << el;
+                        cout << "Enter 1 to push an element to the Stack\nEnter 2 to pop an element from the stack\nEnter 3 to get the top of the stack\nEnter 4 to display the stack\n\nEnter 0 to exit from stack option" << el;
                         cout << "Enter your choice: ";
                         int stackChoice; cin >> stackChoice;
                         if (stackChoice == 1){
-                            deleteBegging();
-                            cout << "Your stack is [";
+                            cout << "Enter the value of the element you want to push: ";
+                            int value; cin >> value;
+                            insertBegging(value);
+                            cout << "Your Stack is [";
                             displayLL();
                             cout << "]" << el;
                             cout << "-------------------------------------------------" << el;
@@ -1307,8 +1379,15 @@ int main(){
                                 break;
                             }
                         }
-                        else if (stackChoice == 2){
-                            cout << "Top of the stack is: " << head->data << el;
+                        if (stackChoice == 2){
+                            if (head == NULL)
+                                cout << "The stack is empty!" << el;
+                            else{
+                                deleteBegging();
+                                cout << "Your stack is [";
+                                displayLL();
+                                cout << "]" << el;
+                            }
                             cout << "-------------------------------------------------" << el;
                             cout << "Do you want to make more operations on this stack?" << el;
                             cout << "Enter (YES,yes,y) to make more operations\nEnter (NO,no,n) to exit to last menu" << el;
@@ -1322,6 +1401,23 @@ int main(){
                             }
                         }
                         else if (stackChoice == 3){
+                            if (head != NULL)
+                                cout << "Top of the stack is: " << head->data << el;
+                            else
+                                cout << "The stack is empty!" << el;
+                            cout << "-------------------------------------------------" << el;
+                            cout << "Do you want to make more operations on this stack?" << el;
+                            cout << "Enter (YES,yes,y) to make more operations\nEnter (NO,no,n) to exit to last menu" << el;
+                            cout << "Enter your choice: ";
+                            string moreChoice; cin >> moreChoice;
+                            if (moreChoice == "YES" || moreChoice == "yes" || moreChoice == "y")
+                                continue;
+                            else if (moreChoice == "NO" || moreChoice == "no" || moreChoice == "n"){
+                                freeMemory();
+                                break;
+                            }
+                        }
+                        else if (stackChoice == 4){
                             cout << "Your stack is [";
                             displayLL();
                             cout << "]" << el;
@@ -1345,9 +1441,204 @@ int main(){
         }
         else if (implementationChoice == 0)
             break;
+        }
     }
-}
-
+    else if(mainChoice == 4){
+        while(true){
+                cout << "Stack activated successfully!" << el;
+                cout << "Enter 1 to use Queue implemented using array\nEnter 2 to use Queue implemented using linked list\n\nEnter 0 to exit from Queue option" << el;
+                cout << "Enter your choice: ";
+                int implementationChoice; cin >> implementationChoice;
+                if (implementationChoice == 1){
+                    front = -1 , rear = -1;
+                    cout << "Enter number of elements you want to enqueue into the queue: ";
+                    int numberOfElements; cin >> numberOfElements;
+                    for (int i = 0; i < numberOfElements; i++)
+                    {
+                        cout << "Enter element NO." << i+1 << ": ";
+                        int value; cin >> value;
+                        enqueue(value);
+                    }
+                    cout << "Your queue is [";
+                    displayQueue();
+                    cout << "]" << el;
+                    cout << "-------------------------------------------------" << el;
+                    while(true){
+                        cout << "Enter 1 to enqueue an element to the queue\nEnter 2 to dequeue an element from the queue\nEnter 3 to get the top of the queue\nEnter 4 to display the queue\n\nEnter 0 to exit from stack option" << el;
+                        cout << "Enter your choice: ";
+                        int queueChoice; cin >> queueChoice;
+                        if (queueChoice == 1){
+                            cout << "Enter the value of the element you want to enque: ";
+                            int value; cin >> value;
+                            enqueue(value);
+                            cout << "Your queue is [";
+                            displayQueue();
+                            cout << "]" << el;
+                            cout << "-------------------------------------------------" << el;
+                            cout << "Do you want to make more operations on this queue?" << el;
+                            cout << "Enter (YES,yes,y) to make more operations\nEnter (NO,no,n) to exit to last menu" << el;
+                            cout << "Enter your choice: ";
+                            string moreChoice; cin >> moreChoice;
+                            if (moreChoice == "YES" || moreChoice == "yes" || moreChoice == "y")
+                                continue;
+                            else if (moreChoice == "NO" || moreChoice == "no" || moreChoice == "n")
+                                break;
+                        }
+                        if (queueChoice == 2){
+                            if ((front == rear && front == -1) || front > rear)
+                                cout << "The queue is empty!" << el;
+                            else{
+                                dequeue();
+                                cout << "Your queue is [";
+                                displayQueue();
+                                cout << "]" << el;
+                            }
+                            cout << "-------------------------------------------------" << el;
+                            cout << "Do you want to make more operations on this queue?" << el;
+                            cout << "Enter (YES,yes,y) to make more operations\nEnter (NO,no,n) to exit to last menu" << el;
+                            cout << "Enter your choice: ";
+                            string moreChoice; cin >> moreChoice;
+                            if (moreChoice == "YES" || moreChoice == "yes" || moreChoice == "y")
+                                continue;
+                            else if (moreChoice == "NO" || moreChoice == "no" || moreChoice == "n")
+                                break;
+                        }
+                        else if (queueChoice == 3){
+                            if((front == rear && front == -1) || front > rear)
+                                cout << "The queue is empty!" << el;
+                            else
+                                cout << "The top of the queue is: " << queuePeek() << el;
+                            cout << "-------------------------------------------------" << el;
+                            cout << "Do you want to make more operations on this queue?" << el;
+                            cout << "Enter (YES,yes,y) to make more operations\nEnter (NO,no,n) to exit to last menu" << el;
+                            cout << "Enter your choice: ";
+                            string moreChoice; cin >> moreChoice;
+                            if (moreChoice == "YES" || moreChoice == "yes" || moreChoice == "y")
+                                continue;
+                            else if (moreChoice == "NO" || moreChoice == "no" || moreChoice == "n")
+                                break;
+                        }
+                        else if (queueChoice == 4){
+                            cout << "Your queue is [";
+                            displayQueue();
+                            cout << "]" << el;
+                            cout << "-------------------------------------------------" << el;
+                            cout << "Do you want to make more operations on this queue?" << el;
+                            cout << "Enter (YES,yes,y) to make more operations\nEnter (NO,no,n) to exit last menu" << el;
+                            cout << "Enter your choice: ";
+                            string moreChoice; cin >> moreChoice;
+                            if (moreChoice == "YES" || moreChoice == "yes" || moreChoice == "y")
+                                continue;
+                            else if (moreChoice == "NO" || moreChoice == "no" || moreChoice == "n")
+                                break;
+                        }
+                        else if(queueChoice == 0)
+                            break;
+                    }
+                }
+                else if (implementationChoice == 2){
+                    head = NULL; tail = NULL;
+                    len = 0;
+                    cout << "Enter number of elements you want to enqueue into the queue: ";
+                    int numberOfElements; cin >> numberOfElements;
+                    for (int i = 0; i < numberOfElements; i++)
+                    {
+                        cout << "Enter element NO." << i+1 << ": ";
+                        int value; cin >> value;
+                        insertEnd(value);
+                    }
+                    cout << "Your Stack is [";
+                    displayLL();
+                    cout << "]" << el;
+                    cout << "-------------------------------------------------" << el;
+                    while(true){
+                        cout << "Enter 1 to enqueue an element to the queue\nEnter 2 to dequeue an element from the queue\nEnter 3 to get the top of the queue\nEnter 4 to display the queue\n\nEnter 0 to exit from queue option" << el;
+                        cout << "Enter your choice: ";
+                        int queueChoice; cin >> queueChoice;
+                        if (queueChoice == 1){
+                            cout << "Enter the value of the element you want to enqueue: ";
+                            int value; cin >> value;
+                            insertEnd(value);
+                            cout << "Your queue is [";
+                            displayLL();
+                            cout << "]" << el;
+                            cout << "-------------------------------------------------" << el;
+                            cout << "Do you want to make more operations on this queue?" << el;
+                            cout << "Enter (YES,yes,y) to make more operations\nEnter (NO,no,n) to exit to last menu" << el;
+                            cout << "Enter your choice: ";
+                            string moreChoice; cin >> moreChoice;
+                            if (moreChoice == "YES" || moreChoice == "yes" || moreChoice == "y")
+                                continue;
+                            else if (moreChoice == "NO" || moreChoice == "no" || moreChoice == "n"){
+                                freeMemory();
+                                break;
+                            }
+                        }
+                        if (queueChoice == 2){
+                            if (head == NULL)
+                                cout << "The queue is empty!" << el;
+                            else{
+                                deleteBegging();
+                                cout << "Your queue is [";
+                                displayLL();
+                                cout << "]" << el;
+                            }
+                            cout << "-------------------------------------------------" << el;
+                            cout << "Do you want to make more operations on this queue?" << el;
+                            cout << "Enter (YES,yes,y) to make more operations\nEnter (NO,no,n) to exit to last menu" << el;
+                            cout << "Enter your choice: ";
+                            string moreChoice; cin >> moreChoice;
+                            if (moreChoice == "YES" || moreChoice == "yes" || moreChoice == "y")
+                                continue;
+                            else if (moreChoice == "NO" || moreChoice == "no" || moreChoice == "n"){
+                                freeMemory();
+                                break;
+                            }
+                        }
+                        else if (queueChoice == 3){
+                            if (head != NULL)
+                                cout << "Top of the queue is: " << head->data << el;
+                            else
+                                cout << "The queue is empty!" << el;
+                            cout << "-------------------------------------------------" << el;
+                            cout << "Do you want to make more operations on this queue?" << el;
+                            cout << "Enter (YES,yes,y) to make more operations\nEnter (NO,no,n) to exit to last menu" << el;
+                            cout << "Enter your choice: ";
+                            string moreChoice; cin >> moreChoice;
+                            if (moreChoice == "YES" || moreChoice == "yes" || moreChoice == "y")
+                                continue;
+                            else if (moreChoice == "NO" || moreChoice == "no" || moreChoice == "n"){
+                                freeMemory();
+                                break;
+                            }
+                        }
+                        else if (queueChoice == 4){
+                            cout << "Your queue is [";
+                            displayLL();
+                            cout << "]" << el;
+                            cout << "-------------------------------------------------" << el;
+                            cout << "Do you want to make more operations on this queue?" << el;
+                            cout << "Enter (YES,yes,y) to make more operations\nEnter (NO,no,n) to exit last menu" << el;
+                            cout << "Enter your choice: ";
+                            string moreChoice; cin >> moreChoice;
+                            if (moreChoice == "YES" || moreChoice == "yes" || moreChoice == "y")
+                                continue;
+                            else if (moreChoice == "NO" || moreChoice == "no" || moreChoice == "n"){
+                                freeMemory();
+                                break;
+                            }
+                        }
+                        else if(queueChoice == 0){
+                            freeMemory();
+                            break;
+                        }                   
+                }
+        }
+        else if (implementationChoice == 0)
+            break;
+        }
+    }
+    
     }
     return 0;
 }
