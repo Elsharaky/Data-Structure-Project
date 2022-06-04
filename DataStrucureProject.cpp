@@ -1763,7 +1763,7 @@ int main(){
                         insertNode(root,value);
                 }
                 cout << "Your Tree displayed in preOrder way [";
-                preOrder();
+                preOrder(root);
                 cout << "\b]" << el;
                 cout << "-------------------------------------------------" << el;
                 cout << "Do you want to make more operations on this linked list?" << el;
@@ -1783,7 +1783,7 @@ int main(){
                 else{
                     deleteNode(root,value);
                     cout << "Your Tree displayed in preOrder way [";
-                    preOrder();
+                    preOrder(root);
                     cout << "\b]" << el;
                     cout << "-------------------------------------------------" << el;
                     cout << "Do you want to make more operations on this linked list?" << el;
@@ -1863,7 +1863,7 @@ int main(){
             }
             else if (treeChoice == 8){
                 cout << "Your Tree displayed in preOrder way [";
-                preOrder();
+                preOrder(root);
                 cout << "\b]" << el;
                 cout << "-------------------------------------------------" << el;
                 cout << "Do you want to make more operations on this linked list?" << el;
@@ -1877,7 +1877,7 @@ int main(){
             }
             else if (treeChoice == 9){
                 cout << "Your Tree displayed in inOrder way [";
-                inOrder();
+                inOrder(root);
                 cout << "\b]" << el;
                 cout << "-------------------------------------------------" << el;
                 cout << "Do you want to make more operations on this linked list?" << el;
@@ -1891,7 +1891,7 @@ int main(){
             }
             else if(treeChoice == 10){
                 cout << "Your Tree displayed in postOrder way [";
-                postOrder();
+                postOrder(root);
                 cout << "\b]" << el;
                 cout << "-------------------------------------------------" << el;
                 cout << "Do you want to make more operations on this linked list?" << el;
@@ -1907,7 +1907,9 @@ int main(){
                 break;
         }
     }
-    else if(mainChoice == 0)
+    else if(mainChoice == 0){
+        cout << "Exiting the program......" << el;
+    }
         break;
     }
     return 0;
