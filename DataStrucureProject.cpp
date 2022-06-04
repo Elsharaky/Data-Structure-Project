@@ -1909,8 +1909,8 @@ int main(){
     }
     else if(mainChoice == 0){
         cout << "Exiting the program......" << el;
-    }
         break;
+    }
     }
     return 0;
 }
