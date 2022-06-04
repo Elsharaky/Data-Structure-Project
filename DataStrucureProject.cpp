@@ -416,6 +416,112 @@ void displayQueue(){
 int queuePeek(){
     return Queue[front%1000];
 }
+struct treeNode{
+    int data;
+    treeNode *left , *right;
+};
+treeNode *insertNode(treeNode *parent,int value){
+    if (parent == NULL){
+        treeNode *newnode = new treeNode;
+        newnode->data = value;
+        newnode->left = NULL;
+        newnode->right = NULL;
+        parent = newnode;
+    }
+    else if(parent->data > value)
+        parent->left = insertNode(parent->left,value);
+    else
+        parent->right = insertNode(parent->right,value);
+    return parent;
+}
+void preOrder(treeNode *parent){
+    if (parent == NULL)
+        return;
+    else{
+        cout << parent->data << " ";
+        preOrder(parent->left);
+        preOrder(parent->right);
+    }
+}
+void inOrder(treeNode *parent){
+    if (parent == NULL)
+        return;
+    else{
+        inOrder(parent->left);
+        cout << parent->data << " ";
+        inOrder(parent->right);
+    }
+}
+void postOrder(treeNode *parent){
+    if (parent == NULL)
+        return;
+    else{
+        postOrder(parent->left);
+        postOrder(parent->right);
+        cout << parent->data << " ";
+    }
+}
+treeNode *searchTree(treeNode *parent,int value){
+    if (parent == NULL)
+        return NULL;
+    if (parent->data == value)
+        return parent;
+    if (parent->data > value)
+        return searchTree(parent->left,value);
+    return searchTree(parent->right,value);
+}
+int height(treeNode *parent){
+    if (parent == NULL)
+        return 0;
+    if (parent->left == NULL && parent->right == NULL)
+        return -1;
+    int lheight = height(parent->left);
+    int rheight = height(parent->right);
+    return 1 + max(lheight,rheight);
+}
+int numberOfLeaves(treeNode *parent){
+    if(parent == NULL)
+        return 0;
+    if (parent->left == NULL && parent->right == NULL)
+        return 1;
+    return numberOfLeaves(parent->left) + numberOfLeaves(parent->right);
+}
+treeNode *findMin(treeNode *parent){
+    if (parent == NULL)
+        return NULL;
+    if (parent->left == NULL)
+        return parent;
+    return findMin(parent->left);
+}
+treeNode *findMax(treeNode *parent){
+    if (parent == NULL)
+        return NULL;
+    if (parent->right == NULL)
+        return parent;
+    return findMax(parent->right);
+}
+treeNode *deleteNode(treeNode *parent,int value){
+    if (parent == NULL)
+        return NULL;
+    if (parent->data > value)
+        parent->left = deleteNode(parent->left,value);
+    else if (parent->data < value)
+        parent->right = deleteNode(parent->right,value);
+    else{
+        if(parent->left == NULL && parent->right == NULL)
+            parent = NULL;
+        else if (parent->left != NULL && parent->right == NULL)
+            parent = parent->left;
+        else if(parent->left == NULL && parent->right != NULL)
+            parent = parent->right;
+        else{
+            treeNode *pre = findMax(parent->left);
+            parent->data = pre->data;
+            parent->left = deleteNode(parent->left,pre->data);
+        }
+    }
+    return parent;
+}
 int main(){
     while (true){
         cout << "Welcome to my data structure project!" << el;
@@ -1638,7 +1744,171 @@ int main(){
             break;
         }
     }
-    
+    else if(mainChoice == 5){
+        while(true){
+            treeNode *root = NULL;
+            cout << "Tree activated successfully!" << el;
+            cout << "Enter 1 to insert nodes in the tree\nEnter 2 to delete node with it's value from the tree\nEnter 3 to search for a value in the tree\nEnter 4 to get the height of the tree\nEnter 5 to get the number of leaf nodes in the tree\nEnter 6 to get the minimum of values in the tree\nEnter 7 to get the maximum of values in the tree\nEnter 8 to diplay the tree in preOrder way\nEnter 9 to display the tree in inOrder way\nEnter 10 to display the tree in postOrder way\n\nEnter 0 to exit from tree option" << el;
+            cout << "Enter your choice: ";
+            int treeChoice; cin >> treeChoice;
+            if (treeChoice == 1){
+                cout << "Enter number of nodes you want to insert: ";
+                int numberOfNodes; cin >> numberOfNodes;
+                for (int i = 0; i < numberOfNodes; i++){
+                    cout << "Enter the value of node NO." << i+1 <<": ";
+                    int value; cin >> value;
+                    if (root == NULL)
+                        root = insertNode(root,value);
+                    else
+                        insertNode(root,value);
+                }
+                cout << "Your Tree displayed in preOrder way [";
+                preOrder();
+                cout << "\b]" << el;
+                cout << "-------------------------------------------------" << el;
+                cout << "Do you want to make more operations on this linked list?" << el;
+                cout << "Enter (YES,yes,y) to make more operations\nEnter (NO,no,n) to exit from tree option" << el;
+                cout << "Enter your choice: ";
+                string moreChoice; cin >> moreChoice;
+                if (moreChoice == "YES" || moreChoice == "yes" || moreChoice == "y")
+                    continue;
+                else if (moreChoice == "NO" || moreChoice == "no" || moreChoice == "n")
+                    break;
+            }
+            else if(treeChoice == 2){
+                cout << "Enter the value you want to delete: ";
+                int value; cin >> value;
+                if (root == NULL)
+                    cout << "The tree is empty!" << el;
+                else{
+                    deleteNode(root,value);
+                    cout << "Your Tree displayed in preOrder way [";
+                    preOrder();
+                    cout << "\b]" << el;
+                    cout << "-------------------------------------------------" << el;
+                    cout << "Do you want to make more operations on this linked list?" << el;
+                    cout << "Enter (YES,yes,y) to make more operations\nEnter (NO,no,n) to exit from tree option" << el;
+                    cout << "Enter your choice: ";
+                    string moreChoice; cin >> moreChoice;
+                    if (moreChoice == "YES" || moreChoice == "yes" || moreChoice == "y")
+                        continue;
+                    else if (moreChoice == "NO" || moreChoice == "no" || moreChoice == "n")
+                        break;
+                }
+            }
+            else if(treeChoice == 3){
+                cout << "Enter the value you want to search for: ";
+                int value; cin >> value;
+                if(searchTree(root,value) != NULL)
+                    cout << "Value " << value << " was found in the tree!" << el;
+                else
+                    cout << "Value " << value << " not found in the tree!" << el;
+                cout << "-------------------------------------------------" << el;
+                    cout << "Do you want to make more operations on this linked list?" << el;
+                    cout << "Enter (YES,yes,y) to make more operations\nEnter (NO,no,n) to exit from tree option" << el;
+                    cout << "Enter your choice: ";
+                    string moreChoice; cin >> moreChoice;
+                    if (moreChoice == "YES" || moreChoice == "yes" || moreChoice == "y")
+                        continue;
+                    else if (moreChoice == "NO" || moreChoice == "no" || moreChoice == "n")
+                        break;
+            }
+            else if (treeChoice == 4){
+                cout << "The height of the tree is: " << height(root) << el;
+                cout << "-------------------------------------------------" << el;
+                cout << "Do you want to make more operations on this linked list?" << el;
+                cout << "Enter (YES,yes,y) to make more operations\nEnter (NO,no,n) to exit from tree option" << el;
+                cout << "Enter your choice: ";
+                string moreChoice; cin >> moreChoice;
+                if (moreChoice == "YES" || moreChoice == "yes" || moreChoice == "y")
+                    continue;
+                else if (moreChoice == "NO" || moreChoice == "no" || moreChoice == "n")
+                    break;
+            }
+            else if (treeChoice == 5){
+                cout << "Number of leaf nodes in the tree is: " << numberOfLeaves(root) << el;
+                cout << "-------------------------------------------------" << el;
+                cout << "Do you want to make more operations on this linked list?" << el;
+                cout << "Enter (YES,yes,y) to make more operations\nEnter (NO,no,n) to exit from tree option" << el;
+                cout << "Enter your choice: ";
+                string moreChoice; cin >> moreChoice;
+                if (moreChoice == "YES" || moreChoice == "yes" || moreChoice == "y")
+                    continue;
+                else if (moreChoice == "NO" || moreChoice == "no" || moreChoice == "n")
+                    break;
+            }
+            else if (treeChoice == 6){
+                cout << "Minimum of values in the tree is: " << findMin(root) << el;
+                cout << "-------------------------------------------------" << el;
+                cout << "Do you want to make more operations on this linked list?" << el;
+                cout << "Enter (YES,yes,y) to make more operations\nEnter (NO,no,n) to exit from tree option" << el;
+                cout << "Enter your choice: ";
+                string moreChoice; cin >> moreChoice;
+                if (moreChoice == "YES" || moreChoice == "yes" || moreChoice == "y")
+                    continue;
+                else if (moreChoice == "NO" || moreChoice == "no" || moreChoice == "n")
+                    break;
+            }
+            else if(treeChoice == 7){
+                cout << "Maximum of values in the tree is: " << findMax(root) << el;
+                cout << "-------------------------------------------------" << el;
+                cout << "Do you want to make more operations on this linked list?" << el;
+                cout << "Enter (YES,yes,y) to make more operations\nEnter (NO,no,n) to exit from tree option" << el;
+                cout << "Enter your choice: ";
+                string moreChoice; cin >> moreChoice;
+                if (moreChoice == "YES" || moreChoice == "yes" || moreChoice == "y")
+                    continue;
+                else if (moreChoice == "NO" || moreChoice == "no" || moreChoice == "n")
+                    break;
+            }
+            else if (treeChoice == 8){
+                cout << "Your Tree displayed in preOrder way [";
+                preOrder();
+                cout << "\b]" << el;
+                cout << "-------------------------------------------------" << el;
+                cout << "Do you want to make more operations on this linked list?" << el;
+                cout << "Enter (YES,yes,y) to make more operations\nEnter (NO,no,n) to exit from tree option" << el;
+                cout << "Enter your choice: ";
+                string moreChoice; cin >> moreChoice;
+                if (moreChoice == "YES" || moreChoice == "yes" || moreChoice == "y")
+                    continue;
+                else if (moreChoice == "NO" || moreChoice == "no" || moreChoice == "n")
+                    break;
+            }
+            else if (treeChoice == 9){
+                cout << "Your Tree displayed in inOrder way [";
+                inOrder();
+                cout << "\b]" << el;
+                cout << "-------------------------------------------------" << el;
+                cout << "Do you want to make more operations on this linked list?" << el;
+                cout << "Enter (YES,yes,y) to make more operations\nEnter (NO,no,n) to exit from tree option" << el;
+                cout << "Enter your choice: ";
+                string moreChoice; cin >> moreChoice;
+                if (moreChoice == "YES" || moreChoice == "yes" || moreChoice == "y")
+                    continue;
+                else if (moreChoice == "NO" || moreChoice == "no" || moreChoice == "n")
+                    break;
+            }
+            else if(treeChoice == 10){
+                cout << "Your Tree displayed in postOrder way [";
+                postOrder();
+                cout << "\b]" << el;
+                cout << "-------------------------------------------------" << el;
+                cout << "Do you want to make more operations on this linked list?" << el;
+                cout << "Enter (YES,yes,y) to make more operations\nEnter (NO,no,n) to exit from tree option" << el;
+                cout << "Enter your choice: ";
+                string moreChoice; cin >> moreChoice;
+                if (moreChoice == "YES" || moreChoice == "yes" || moreChoice == "y")
+                    continue;
+                else if (moreChoice == "NO" || moreChoice == "no" || moreChoice == "n")
+                    break;
+            }
+            else if(treeChoice == 0)
+                break;
+        }
+    }
+    else if(mainChoice == 0)
+        break;
     }
     return 0;
 }
